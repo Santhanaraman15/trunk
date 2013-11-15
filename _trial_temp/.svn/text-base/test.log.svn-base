@@ -1,0 +1,7 @@
+2013-07-16 16:29:34-0600 [-] Log opened.
+2013-07-16 16:29:34-0600 [-] --> proxy.tests.test_server.TestFakeProxyServer.test_response_toclient <--
+2013-07-16 16:29:34-0600 [-] using set_wakeup_fd
+2013-07-16 16:29:34-0600 [-] proxy connection made: ipad?
+2013-07-16 16:29:34-0600 [-] --> proxy.tests.test_server.TestFakeProxyServer.test_response_toclient_error <--
+2013-07-16 16:29:34-0600 [-] proxy connection made: ipad?
+2013-07-16 16:29:34-0600 [-] <bound method Failure.getErrorMessage of <twisted.python.failure.Failure <class 'twisted.python.failure.DefaultException'>>>

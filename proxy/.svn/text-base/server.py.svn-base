@@ -1,0 +1,38 @@
+from twisted.python import log, failure
+from twisted.internet.protocol import ServerFactory
+from twisted.conch.telnet import TelnetProtocol
+
+
+class proxy_protocol(TelnetProtocol):
+    def connectionMade(self):
+        log.msg( 'proxy connection made: ipad?' )
+        self.factory.myTarget.listeners.append(self)
+
+    def connectionLost(self, reason):
+        log.msg( 'proxy connection lost: ipad?' )
+        self.factory.myTarget.listeners.remove(self)
+
+    def dataReceived(self, data):
+        client = self.factory.myTarget
+        d = client.get_cached(data)
+        if not d == None:            
+            if isinstance(d.result, failure.Failure):
+                msg = d.result.getErrorMessage
+                d.addErrback( lambda r: log.msg(msg) )
+                d.addCallback( lambda r: self.transport.write('ERROR\r\n') )
+            else:
+                d.addCallback( self.transport.write )
+ 
+class factory(ServerFactory):
+    protocol = proxy_protocol
+
+    def __init__(self, TargetFactory):
+        self.myTarget = TargetFactory
+        self.noisy = False
+        self.t_name = self.myTarget.name
+
+    def startFactory(self):
+        log.msg('Starting proxy service for aspen: %s.' % (self.t_name))
+
+    def stopFactory(self):
+        log.msg('Shutting down proxy service for aspen: %s.' % (self.t_name))
